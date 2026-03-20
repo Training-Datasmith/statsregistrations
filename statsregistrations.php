@@ -106,6 +106,14 @@ class statsregistrations extends ModuleGraph
         return $result['buyers'];
     }
 
+    /**
+     * Render the customer registration chart on the admin statistics dashboard.
+     *
+     * Shows new customer registrations over the selected period as a line/bar chart,
+     * and displays a total registrations count for the full period.
+     *
+     * @return string HTML output for the statistics widget
+     */
     public function hookDisplayAdminStatsModules()
     {
         $total_registrations = $this->getTotalRegistrations();
