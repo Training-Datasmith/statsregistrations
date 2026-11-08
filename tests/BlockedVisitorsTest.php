@@ -43,6 +43,8 @@ class BlockedVisitorsTest extends StatsregTestCase
         $module = $this->newModule();
         $this->applyEmployeeToModule($module, $employee);
         statsreg_exec_sql('RENAME TABLE `' . _DB_PREFIX_ . 'page_type` TO `' . _DB_PREFIX_ . 'page_type_hidden`');
-        $this->assertSame(0, (int) $module->getBlockedVisitors());
+        $value = $module->getBlockedVisitors();
+        $this->assertInternalType('integer', $value);
+        $this->assertSame(0, $value);
     }
 }

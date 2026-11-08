@@ -94,9 +94,17 @@ $failed = false;
 if ($exit !== 0) {
     $failed = true;
 }
+$filteredLines = array();
+foreach (explode("\n", $text) as $line) {
+    if ($line === "Warning:\tDeprecated configuration setting \"strict\" used") {
+        continue;
+    }
+    $filteredLines[] = $line;
+}
+$textForScan = implode("\n", $filteredLines);
+
 $needles = array(
     'Notice:',
-    "\nWarning: ",
     'Deprecated:',
     'Strict Standards:',
     'Parse error:',
@@ -104,9 +112,12 @@ $needles = array(
     'OK, but',
 );
 foreach ($needles as $needle) {
-    if (strpos($text, $needle) !== false) {
+    if (strpos($textForScan, $needle) !== false) {
         $failed = true;
     }
+}
+if (strpos($textForScan, 'Warning:') !== false) {
+    $failed = true;
 }
 if (preg_match('/Failures: (\d+)/', $text, $m) && (int) $m[1] > 0) {
     $failed = true;
@@ -114,7 +125,14 @@ if (preg_match('/Failures: (\d+)/', $text, $m) && (int) $m[1] > 0) {
 if (preg_match('/Errors: (\d+)/', $text, $m) && (int) $m[1] > 0) {
     $failed = true;
 }
-if (!preg_match('/OK \(27 tests, \d+ assertions\)/', $text)) {
+$okLineFound = false;
+foreach (explode("\n", $text) as $line) {
+    if (preg_match('/^OK \(27 tests, [0-9]+ assertions\)$/', $line)) {
+        $okLineFound = true;
+        break;
+    }
+}
+if (!$okLineFound) {
     $failed = true;
 }
 if (!is_file($junitPath)) {

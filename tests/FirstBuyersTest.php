@@ -60,6 +60,8 @@ class FirstBuyersTest extends StatsregTestCase
         $module = $this->newModule();
         $this->applyEmployeeToModule($module, $employee);
         statsreg_exec_sql('RENAME TABLE `' . _DB_PREFIX_ . 'orders` TO `' . _DB_PREFIX_ . 'orders_hidden`');
-        $this->assertSame(0, (int) $module->getFirstBuyers());
+        $value = $module->getFirstBuyers();
+        $this->assertInternalType('integer', $value);
+        $this->assertSame(0, $value);
     }
 }

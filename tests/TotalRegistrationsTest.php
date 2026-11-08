@@ -26,6 +26,8 @@ class TotalRegistrationsTest extends StatsregTestCase
         $module = $this->newModule();
         $this->applyEmployeeToModule($module, $employee);
         statsreg_exec_sql('RENAME TABLE `' . _DB_PREFIX_ . 'customer` TO `' . _DB_PREFIX_ . 'customer_hidden`');
-        $this->assertSame(0, (int) $module->getTotalRegistrations());
+        $value = $module->getTotalRegistrations();
+        $this->assertInternalType('integer', $value);
+        $this->assertSame(0, $value);
     }
 }
