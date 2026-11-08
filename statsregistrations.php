@@ -86,7 +86,7 @@ class statsregistrations extends ModuleGraph
 					AND c.`date_add` BETWEEN ' . ModuleGraph::getDateBetween();
         $result = Db::getInstance((bool) _PS_USE_SQL_SLAVE_)->getRow($sql);
 
-        return $result['blocked'];
+        return isset($result['blocked']) ? $result['blocked'] : 0;
     }
 
     public function getFirstBuyers()
@@ -101,7 +101,7 @@ class statsregistrations extends ModuleGraph
 					AND ABS(TIMEDIFF(o.date_add, c.date_add)+0) < 120000';
         $result = Db::getInstance((bool) _PS_USE_SQL_SLAVE_)->getRow($sql);
 
-        return $result['buyers'];
+        return isset($result['buyers']) ? $result['buyers'] : 0;
     }
 
     public function hookDisplayAdminStatsModules()
@@ -111,7 +111,7 @@ class statsregistrations extends ModuleGraph
         $total_buyers = $this->getFirstBuyers();
         if (Tools::getValue('export')) {
             $this->csvExport([
-                'layers' => 0,
+                'layers' => 1,
                 'type' => 'line',
             ]);
         }
